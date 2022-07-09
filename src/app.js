@@ -12,19 +12,19 @@ import "./styles/styles.scss";
 
 const store = configureStore();
 
-const expense3 = store.dispatch(
-  addExpense({ description: "Rent", amount: "5000", createdAt: 1000 })
-);
-const expense1 = store.dispatch(
-  addExpense({ description: "Water Bill", amount: "1000", createdAt: 100 })
-);
-const expense2 = store.dispatch(
-  addExpense({ description: "Gas Bill", amount: "5000", createdAt: 200 })
-);
+// const expense3 = store.dispatch(
+//   addExpense({ description: "Rent", amount: "5000", createdAt: 1000 })
+// );
+// const expense1 = store.dispatch(
+//   addExpense({ description: "Water Bill", amount: "1000", createdAt: 100 })
+// );
+// const expense2 = store.dispatch(
+//   addExpense({ description: "Gas Bill", amount: "5000", createdAt: 200 })
+// );
 
 const state = store.getState();
 const visibleExpenses = getVisibleExpenses(state.expenses, state.filters);
-console.log(store.getState());
+// console.log(store.getState());
 
 const jsx = (
   <Provider store={store}>
