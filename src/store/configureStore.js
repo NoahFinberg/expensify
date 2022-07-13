@@ -1,8 +1,4 @@
-import {
-  createSlice,
-  configureStore,
-  getDefaultMiddleware,
-} from "@reduxjs/toolkit";
+import { createSlice, configureStore } from "@reduxjs/toolkit";
 import expensesReducer from "../reducers/expenses";
 import filtersReducer from "../reducers/filters";
 
@@ -14,6 +10,7 @@ export default () => {
   };
 
   const store = configureStore({
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
     reducer,
   }); // Store creation
   return store;
