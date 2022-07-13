@@ -16,9 +16,10 @@ export const removeExpense = ({ id } = {}) => ({
 // START_REMOVE_EXPENSES
 export const startRemoveExpenses = ({ id }) => {
   const dbRef = firebase.ref(firebase.getDatabase());
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const uid = getState().auth.uid;
     return firebase
-      .remove(firebase.child(dbRef, `expenses/${id}`))
+      .remove(firebase.child(dbRef, `/users/${uid}/expenses/${id}`))
       .then(() => {
         dispatch(removeExpense({ id }));
       })
@@ -38,9 +39,10 @@ export const editExpense = (id, updates) => ({
 // START EDIT EXPENSE
 export const startEditExpense = (id, updates) => {
   const dbRef = firebase.ref(firebase.getDatabase());
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const uid = getState().auth.uid;
     const firebaseUpdates = {};
-    firebaseUpdates[`/expenses/${id}`] = updates;
+    firebaseUpdates[`users/${uid}/expenses/${id}`] = updates;
     return firebase
       .update(dbRef, firebaseUpdates)
       .then(() => {
@@ -53,7 +55,8 @@ export const startEditExpense = (id, updates) => {
 };
 
 export const startAddExpense = (expenseData = {}) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const uid = getState().auth.uid;
     const {
       description = "",
       note = "",
@@ -61,7 +64,7 @@ export const startAddExpense = (expenseData = {}) => {
       createdAt = 0,
     } = expenseData;
     const expense = { description, note, amount, createdAt };
-    const expenseListRef = firebase.ref(database, "expenses");
+    const expenseListRef = firebase.ref(database, `/users/${uid}/expenses`);
     const newExpenseRef = firebase.push(expenseListRef);
     return firebase
       .set(newExpenseRef, {
@@ -87,10 +90,11 @@ export const setExpenses = (expenses) => ({
 // START SET EXPENSES
 export const startSetExpenses = () => {
   const dbRef = firebase.ref(firebase.getDatabase());
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const uid = getState().auth.uid;
     const expenses = [];
     return firebase
-      .get(firebase.child(dbRef, "expenses"))
+      .get(firebase.child(dbRef, `/users/${uid}/expenses`))
       .then((snapshot) => {
         if (snapshot.exists()) {
           snapshot.forEach((childSnapshot) => {

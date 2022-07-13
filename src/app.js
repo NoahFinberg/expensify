@@ -2,14 +2,14 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { BrowserRouter, Routes, Route, Link, NavLink } from "react-router-dom";
-import AppRouter from "./routers/AppRouter";
+import AppRouter, { history } from "./routers/AppRouter";
 import configureStore from "./store/configureStore";
 import { startSetExpenses } from "./actions/expenses";
-import { setTextFilter } from "./actions/filters";
+import { login, logout } from "./actions/auth";
 import getVisibleExpenses from "./selectors/expenses";
 import "normalize.css/normalize.css";
 import "./styles/styles.scss";
-import "./firebase/firebase.js";
+import { firebase, provider, auth } from "./firebase/firebase.js";
 
 const store = configureStore();
 
@@ -26,6 +26,29 @@ const jsx = (
     <AppRouter />
   </Provider>
 );
-store.dispatch(startSetExpenses()).then(() => {
-  root.render(jsx);
+
+let hasRendered = false;
+const renderApp = () => {
+  if (!hasRendered) {
+    root.render(jsx);
+    hasRendered = true;
+  }
+};
+
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    store.dispatch(login(user.uid));
+    console.log("uid", user.uid);
+    store.dispatch(startSetExpenses()).then(() => {
+      renderApp();
+      if (history.location.pathname === "/") {
+        history.push("/dashboard");
+      }
+    });
+  } else {
+    store.dispatch(logout());
+    console.log("logged out");
+    renderApp();
+    history.push("/");
+  }
 });

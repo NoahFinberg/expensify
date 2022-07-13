@@ -11,6 +11,12 @@ import {
   onValue,
 } from "firebase/database";
 import { collection, getDocs } from "firebase/firestore";
+import {
+  getAuth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut,
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -25,6 +31,9 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+const provider = new GoogleAuthProvider();
+const auth = getAuth();
+
 export {
   firebase,
   getDatabase,
@@ -37,6 +46,11 @@ export {
   onValue,
   collection,
   getDocs,
+  provider,
+  auth,
+  signInWithPopup,
+  GoogleAuthProvider,
+  signOut,
   db as default,
 };
 
