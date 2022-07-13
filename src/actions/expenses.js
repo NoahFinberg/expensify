@@ -13,12 +13,44 @@ export const removeExpense = ({ id } = {}) => ({
   id,
 });
 
+// START_REMOVE_EXPENSES
+export const startRemoveExpenses = ({ id }) => {
+  const dbRef = firebase.ref(firebase.getDatabase());
+  return (dispatch) => {
+    return firebase
+      .remove(firebase.child(dbRef, `expenses/${id}`))
+      .then(() => {
+        dispatch(removeExpense({ id }));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+};
+
 // EDIT_EXPENSE
 export const editExpense = (id, updates) => ({
   type: "EDIT_EXPENSE",
   id,
   updates,
 });
+
+// START EDIT EXPENSE
+export const startEditExpense = (id, updates) => {
+  const dbRef = firebase.ref(firebase.getDatabase());
+  return (dispatch) => {
+    const firebaseUpdates = {};
+    firebaseUpdates[`/expenses/${id}`] = updates;
+    return firebase
+      .update(dbRef, firebaseUpdates)
+      .then(() => {
+        dispatch(editExpense(id, updates));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+};
 
 export const startAddExpense = (expenseData = {}) => {
   return (dispatch) => {
@@ -52,6 +84,7 @@ export const setExpenses = (expenses) => ({
   expenses,
 });
 
+// START SET EXPENSES
 export const startSetExpenses = () => {
   const dbRef = firebase.ref(firebase.getDatabase());
   return (dispatch) => {
