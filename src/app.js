@@ -10,7 +10,7 @@ import getVisibleExpenses from "./selectors/expenses";
 import "normalize.css/normalize.css";
 import "./styles/styles.scss";
 import { firebase, provider, auth } from "./firebase/firebase.js";
-
+import LoadingPage from "./components/LoadingPage.js";
 const store = configureStore();
 
 const state = store.getState();
@@ -19,7 +19,7 @@ const visibleExpenses = getVisibleExpenses(state.expenses, state.filters);
 
 const container = document.getElementById("app");
 const root = createRoot(container);
-root.render(<p>Loading...</p>);
+root.render(<LoadingPage />);
 
 const jsx = (
   <Provider store={store}>
